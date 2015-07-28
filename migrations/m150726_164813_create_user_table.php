@@ -16,13 +16,10 @@ class m150726_164813_create_user_table extends Migration
                 'email' => Schema::TYPE_STRING.'(40)',
             ]
         );
-
-        //$this->addForeignKey('post_user', 'post', 'author_id', 'user', 'id', 'cascade', 'cascade');
     }
 
     public function safeDown()
     {
-        //$this->dropForeignKey('post_user', 'user');
         $this->dropTable('user');
     }
 }
