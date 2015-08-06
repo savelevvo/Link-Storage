@@ -7,6 +7,7 @@ $config = [
     'language' => 'ru-RU',
     'timeZone' => 'Europe/Moscow',
     'version' => '0.1',
+    'defaultRoute' => 'post/add',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [

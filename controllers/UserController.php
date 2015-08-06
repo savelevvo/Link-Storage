@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\User;
 use app\models\UserSearch;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -58,17 +59,36 @@ class UserController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionRegister()
     {
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $identity = User::findOne(['login' => $model->login]);
+            Yii::$app->user->login($identity);
             return $this->redirect(['view', 'id' => $model->id]);
+        } elseif (!Yii::$app->user->isGuest) {
+            throw new BadRequestHttpException("You are already logged in!");
         } else {
-            return $this->render('create', [
+            return $this->render('register', [
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionLogin()
+    {
+        $model = new User();
+
+        return $this->render('login', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+        return $this->goHome();
     }
 
     /**

@@ -3,6 +3,8 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "user".
@@ -12,7 +14,8 @@ use Yii;
  * @property string $password
  * @property string $email
  */
-class User extends \yii\db\ActiveRecord
+//class User extends \yii\db\ActiveRecord
+class User extends ActiveRecord implements IdentityInterface
 {
     /**
      * @inheritdoc
@@ -47,5 +50,55 @@ class User extends \yii\db\ActiveRecord
             'password' => 'Password',
             'email' => 'Email',
         ];
+    }
+
+    public function login()
+    {
+        if ($this->validate()) {
+            return Yii::$app->user->login($this->getUser());
+        } else {
+            return false;
+        }
+    }
+
+/*
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $this->token = hash('sha256',$this->email.Yii::$app->params['salt']);
+                $this->password= hash('sha256',$this->password.Yii::$app->params['salt']);
+                $this->auth=0;
+                $this->ban=0;
+
+            }
+            return true;
+        }
+        return false;
+    }
+*/
+    public static function findIdentity($id)
+    {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        return static::findOne(['access_token' => $token]);
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getAuthKey()
+    {
+        return $this->auth_key;
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        return $this->getAuthKey() === $authKey;
     }
 }

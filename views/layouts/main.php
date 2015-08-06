@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
@@ -35,19 +36,31 @@ AppAsset::register($this);
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
-                    ['label' => 'Home', 'url' => ['/site/index']],
-                    ['label' => 'Add', 'url' => ['post/add']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => 'Login', 'url' => ['/site/login']] :
-
-                        ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                            'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']],
-
-                    !Yii::$app->user->isGuest ?
-                        ['label' => 'Profile', 'url' => ['user/profile']] : "",
-
-
+                    [
+                        'label' => 'Home',
+                        'url'   => Url::to(['post/add']),
+                    ],
+                    [
+                        'label'   => 'Register',
+                        'url'     => Url::to(['user/register']),
+                        'visible' => Yii::$app->user->isGuest,
+                    ],
+                    [
+                        'label'   => 'Login',
+                        'url'     => Url::to(['user/login']),
+                        'visible' => Yii::$app->user->isGuest,
+                    ],
+                    [
+                        'label'   => 'Profile',
+                        'url'     => Url::to(['user/view', 'id'=> Yii::$app->user->id]),
+                        'visible' => !Yii::$app->user->isGuest,
+                    ],
+                    [
+                        'label'       => 'Logout (' . Yii::$app->user->identity->login . ')',
+                        'url'         => Url::to(['user/logout']),
+                        'linkOptions' => ['data-method' => 'post'],
+                        'visible'     => !Yii::$app->user->isGuest,
+                    ],
                 ],
             ]);
             NavBar::end();
@@ -63,7 +76,7 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-            <p class="pull-left">LinStor.net <?= " Version: ".Yii::$app->version; ?></p>
+            <p class="pull-left">LinStor.net <?= " ".Yii::$app->version; ?></p>
             <p class="pull-right"><?//= Yii::powered() ?></p>
         </div>
     </footer>
