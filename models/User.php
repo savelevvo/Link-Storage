@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use yii\web\BadRequestHttpException;
 
 /**
  * This is the model class for table "user".
@@ -52,9 +53,26 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    public function register()
+    {
+        if (Yii::$app->user->login(User::findOne(['login' => $this->login]))) {
+            return true;
+        } elseif (!Yii::$app->user->isGuest) {
+            throw new BadRequestHttpException("You are already logged in!");
+        }
+
+    }
+
     public function login()
     {
-
+        if ($identity = User::findOne(['login' => $this->login])) {
+            if (Yii::$app->getSecurity()->validatePassword($this->password, $identity->password)) {
+                Yii::$app->user->login($identity);
+                return true;
+            } else
+                throw new BadRequestHttpException('Invalid password!');
+        } else
+            throw new BadRequestHttpException('User does not exist!');
     }
 
     /**
@@ -71,11 +89,6 @@ class User extends ActiveRecord implements IdentityInterface
         } else {
             return false;
         }
-    }
-
-    public static function logout()
-    {
-        Yii::$app->user->logout();
     }
 
     public static function findIdentity($id)

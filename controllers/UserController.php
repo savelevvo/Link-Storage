@@ -62,50 +62,33 @@ class UserController extends Controller
     public function actionRegister()
     {
         $model = new User();
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $identity = User::findOne(['login' => $model->login]);
-            Yii::$app->user->login($identity);
-            return $this->redirect(['view', 'id' => $model->id]);
-        } elseif (!Yii::$app->user->isGuest) {
-            throw new BadRequestHttpException("You are already logged in!");
-        } else {
-            return $this->render('register', [
-                'model' => $model,
-            ]);
+            if ($model->register())
+                $this->redirect(['view', 'id' => $model->id]);
         }
+
+        return $this->render('register', [
+            'model' => $model,
+        ]);
+
     }
 
     public function actionLogin()
     {
         $model = new User();
+        if($model->load(Yii::$app->request->post()))
+            if ($model->login()) $this->goHome();
 
-        if($model->load(Yii::$app->request->post())) {
 
-            // if user with that login exists
-            if ($identity = User::findOne(['login' => $model->login])) {
+        return $this->render('login', [
+            'model' => $model,
+        ]);
 
-                if (Yii::$app->getSecurity()->validatePassword($model->password, $identity->password)) {
-                    Yii::$app->user->login($identity);
-                    return $this->goHome();
-
-                } else {
-                    throw new BadRequestHttpException('Invalid password!');
-                }
-
-            } else {
-                throw new BadRequestHttpException('User does not exist!');
-            }
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
     }
 
     public function actionLogout()
     {
-        User::logout();
+        Yii::$app->user->logout();;
         return $this->goHome();
     }
 

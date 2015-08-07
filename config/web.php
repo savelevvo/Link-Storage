@@ -6,13 +6,12 @@ $config = [
     'id' => 'basic',
     'language' => 'ru-RU',
     'timeZone' => 'Europe/Moscow',
-    'version' => '0.1',
+    'version' => '0.2.5',
     'defaultRoute' => 'post/add',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'qwerty',
         ],
         'cache' => [
