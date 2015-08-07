@@ -80,14 +80,32 @@ class UserController extends Controller
     {
         $model = new User();
 
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+        if($model->load(Yii::$app->request->post())) {
+
+            // if user with that login exists
+            if ($identity = User::findOne(['login' => $model->login])) {
+
+                if (Yii::$app->getSecurity()->validatePassword($model->password, $identity->password)) {
+                    Yii::$app->user->login($identity);
+                    return $this->goHome();
+
+                } else {
+                    throw new BadRequestHttpException('Invalid password!');
+                }
+
+            } else {
+                throw new BadRequestHttpException('User does not exist!');
+            }
+        } else {
+            return $this->render('login', [
+                'model' => $model,
+            ]);
+        }
     }
 
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        User::logout();
         return $this->goHome();
     }
 

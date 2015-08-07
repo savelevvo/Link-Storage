@@ -54,29 +54,30 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function login()
     {
-        if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser());
+
+    }
+
+    /**
+     * @param bool $insert
+     * @return bool
+     *
+     * generates the hash
+     */
+    public function beforeSave($insert = true)
+    {
+        if (parent::beforeSave($insert)) {
+            $this->password = Yii::$app->getSecurity()->generatePasswordHash($this->password);
+            return true;
         } else {
             return false;
         }
     }
 
-/*
-    public function beforeSave($insert)
+    public static function logout()
     {
-        if (parent::beforeSave($insert)) {
-            if ($this->isNewRecord) {
-                $this->token = hash('sha256',$this->email.Yii::$app->params['salt']);
-                $this->password= hash('sha256',$this->password.Yii::$app->params['salt']);
-                $this->auth=0;
-                $this->ban=0;
-
-            }
-            return true;
-        }
-        return false;
+        Yii::$app->user->logout();
     }
-*/
+
     public static function findIdentity($id)
     {
         return static::findOne($id);
