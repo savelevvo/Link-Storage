@@ -3,11 +3,10 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
-//use app\models\LoginForm;
-use app\models\ContactForm;
+use app\models\ContactForm;use yii\bootstrap\Modal;
 
 class SiteController extends Controller
 {
@@ -17,13 +16,13 @@ class SiteController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['logout'],
-                'rules' => [
+                /*'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                ],
+                ],*/
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -49,6 +48,16 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
+
+        Modal::begin([
+            'header' => '<h2>Hello world</h2>',
+            'toggleButton' => ['label' => 'click me'],
+        ]);
+
+        echo 'Say hello...';
+
+        Modal::end();
+
         return $this->render('index');
     }
 

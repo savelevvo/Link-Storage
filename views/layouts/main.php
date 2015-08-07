@@ -18,7 +18,7 @@ AppAsset::register($this);
     <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?= Html::encode($this->title).' | '.Yii::$app->name ?></title>
     <?php $this->head() ?>
 </head>
 <body>
@@ -27,10 +27,10 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'LinStor.net',
-                'brandUrl' => Yii::$app->homeUrl,
+//                'brandLabel' => 'LinStor.net',
+//                'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
-                    'class' => 'navbar-inverse navbar-fixed-top',
+                    'class' => 'navbar navbar-fixed-top',
                 ],
             ]);
             echo Nav::widget([
@@ -51,15 +51,19 @@ AppAsset::register($this);
                         'visible' => Yii::$app->user->isGuest,
                     ],
                     [
-                        'label'   => 'Profile',
-                        'url'     => Url::to(['user/view', 'id'=> Yii::$app->user->id]),
+                        'label' => Yii::$app->user->identity->login,
+                        'items' => [
+                            [
+                                'label' => 'Profile',
+                                'url' => Url::to(['user/view', 'id'=> Yii::$app->user->id])
+                            ],
+                            [
+                                'label' => 'Logout',
+                                'url' => Url::to(['user/logout']),
+                                'linkOptions' => ['data-method' => 'post'],
+                            ],
+                        ],
                         'visible' => !Yii::$app->user->isGuest,
-                    ],
-                    [
-                        'label'       => 'Logout (' . Yii::$app->user->identity->login . ')',
-                        'url'         => Url::to(['user/logout']),
-                        'linkOptions' => ['data-method' => 'post'],
-                        'visible'     => !Yii::$app->user->isGuest,
                     ],
                 ],
             ]);
@@ -67,9 +71,9 @@ AppAsset::register($this);
         ?>
 
         <div class="container">
-            <?= Breadcrumbs::widget([
+            <?/*= Breadcrumbs::widget([
                 'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ]) ?>
+            ])*/ ?>
             <?= $content ?>
         </div>
     </div>

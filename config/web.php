@@ -4,7 +4,8 @@ $params = require(__DIR__ . '/params.php');
 
 $config = [
     'id' => 'basic',
-    'language' => 'ru-RU',
+    //'language' => 'ru-RU',
+    'name' => 'Link Storage',
     'timeZone' => 'Europe/Moscow',
     'version' => '0.2.5',
     'defaultRoute' => 'post/add',
