@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "post".
@@ -14,7 +15,7 @@ use Yii;
  * @property string $views
  * @property string $descr
  */
-class Post extends \yii\db\ActiveRecord
+class Post extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -30,9 +31,10 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['value', 'author_id', 'date'], 'required'],
+//            [['value', 'author_id', 'date'], 'required'],
+            [['value'], 'required'],
             [['author_id', 'views'], 'integer'],
-            [['date'], 'safe'],
+            //[['date'], 'safe'],
             [['value'], 'string', 'max' => 2048],
             [['descr'], 'string', 'max' => 500]
         ];
@@ -52,4 +54,17 @@ class Post extends \yii\db\ActiveRecord
             'descr' => 'Description',
         ];
     }
+
+    public function beforeSave($insert = true)
+    {
+        if (parent::beforeSave($insert)) {
+            $this->author_id = (Yii::$app->user->isGuest) ? null : Yii::$app->user->id;
+            $this->date = date('Y-m-d h:m:s');
+            $this->views = 0;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

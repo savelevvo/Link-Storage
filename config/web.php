@@ -8,7 +8,7 @@ $config = [
     'name' => 'Link Storage',
     'timeZone' => 'Europe/Moscow',
     'version' => '0.2.5',
-    'defaultRoute' => 'post/add',
+    'defaultRoute' => 'post/create',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
@@ -21,6 +21,14 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+        ],
+        'urlManager' => [
+            //'class' => 'yii\web\urlManager',
+            'enablePrettyUrl' => true,
+//            'showScriptName' => false,
+            'rules' => [
+                '<action:login|register>' => 'user/<action>',
+            ],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

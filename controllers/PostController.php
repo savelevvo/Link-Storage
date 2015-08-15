@@ -119,12 +119,12 @@ class PostController extends Controller
         }
     }
 
-    public function actionAdd()
+    /*public function actionAdd()
     {
         $model = new Post();
         return $this->render('create', [
             'model' => $model,
         ]);
 
-    }
+    }*/
 }

@@ -56,12 +56,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function register()
     {
-        if (Yii::$app->user->login(User::findOne(['login' => $this->login]))) {
+        if (Yii::$app->user->login(User::findOne(['login' => $this->login])))
             return true;
-        } elseif (!Yii::$app->user->isGuest) {
-            throw new BadRequestHttpException("You are already logged in!");
-        }
-
     }
 
     public function login()

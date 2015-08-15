@@ -3,8 +3,10 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
+use yii\bootstrap\BaseHtml;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -38,7 +40,7 @@ AppAsset::register($this);
                 'items' => [
                     [
                         'label' => 'Home',
-                        'url'   => Url::to(['post/add']),
+                        'url'   => Yii::$app->homeUrl,
                     ],
                     [
                         'label'   => 'Register',
@@ -55,8 +57,13 @@ AppAsset::register($this);
                         'items' => [
                             [
                                 'label' => 'Profile',
-                                'url' => Url::to(['user/view', 'id'=> Yii::$app->user->id])
+                                'url' => Url::to(['user/view', 'id'=> Yii::$app->user->id]),
                             ],
+                            [
+                                'label' => 'My posts',
+                                'url' => '#',
+                            ],
+                            '<li class="divider"></li>',
                             [
                                 'label' => 'Logout',
                                 'url' => Url::to(['user/logout']),
@@ -81,7 +88,7 @@ AppAsset::register($this);
     <footer class="footer">
         <div class="container">
             <p class="pull-left">LinStor.net <?= " (v.".Yii::$app->version.")"; ?></p>
-            <p class="pull-right"><?//= Yii::powered() ?></p>
+            <p class="pull-right"><?=Html::a('About', ['site/about']).' | '. Html::a('Contact', ['site/contact']) ?></p>
         </div>
     </footer>
 

@@ -79,9 +79,8 @@ class UserController extends Controller
     public function actionRegister()
     {
         $model = new User();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            if ($model->register())
-                $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $model->save() && $model->register()) {
+            $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('register', [
